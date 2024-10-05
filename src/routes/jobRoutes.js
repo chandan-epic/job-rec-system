@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Job = require('../models/Job'); // Adjust the path if necessary
+const User=require('../models/Job')
 console.log(Job);
 // Function to calculate similarity
 const calculateSimilarity = (userSkills, jobSkills) => {
@@ -13,11 +14,12 @@ const calculateSimilarity = (userSkills, jobSkills) => {
 
 // Recommendation function
 const recommendJobs = (userProfile, jobs) => {
-    console.log("in rec job method route")
+    console.log(jobs);
+    console.log("in rec job method")
     const recommendedJobs = jobs.map(job => {
         const similarity = calculateSimilarity(userProfile.skills, job.required_skills);
         return { ...job._doc, similarity };
-    }).filter(job => job.similarity > 0.3) // Adjust threshold
+    }).filter(job => job.similarity > 0.1) // Adjust threshold
       .sort((a, b) => b.similarity - a.similarity);
 
     return recommendedJobs;
@@ -32,11 +34,17 @@ router.post('/recommendations', async (req, res) => {
         const userProfile = {
             skills: userData.skills,
             experience_level: userData.experience_level,
-            preferences: userData.preferences.desired_roles,
+            preferences: userData.preferences,
         };
-
-        const jobs = await Job.find({}); // Fetch all job postings
-        console.log(jobs);
+        console.log("userProfile:",userProfile);
+        
+        const jobs = await User.find({
+            required_skills: { $in: userProfile.skills },
+            experience_level: userProfile.experience_level,
+            location: { $in: userProfile.preferences.locations },
+            job_type: userProfile.preferences.job_type
+        });
+        console.log(jobs.job_type);
         const recommendations = recommendJobs(userProfile, jobs);
         
         res.json(recommendations);

@@ -8,6 +8,6 @@ const JobSchema = new mongoose.Schema({
   location: String,
   job_type: String,
   experience_level: String
-});
+},{collection:'users'});
 
 module.exports = mongoose.model('Job', JobSchema);
