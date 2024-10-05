@@ -16,15 +16,15 @@ const jobs = [
 ];
 
 const insertJobs = async () => {
-  await connectDB(); // Connect to the database
+  await connectDB();
 
   try {
-    await User.insertMany(jobs); // Insert the jobs into the users collection
+    await User.insertMany(jobs);
     console.log('Jobs inserted successfully');
   } catch (error) {
     console.error('Error inserting jobs:', error);
   } finally {
-    mongoose.connection.close(); // Close the connection
+    mongoose.connection.close();
   }
 };
 
