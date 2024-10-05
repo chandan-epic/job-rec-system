@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Job = require('../models/Job'); // Adjust the path if necessary
-const User=require('../models/Job')
+const User=require('../models/Job');
 console.log(Job);
 // Function to calculate similarity
 const calculateSimilarity = (userSkills, jobSkills) => {
